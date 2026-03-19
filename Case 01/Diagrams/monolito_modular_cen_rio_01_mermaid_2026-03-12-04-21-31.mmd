@@ -1,0 +1,20 @@
+graph TD
+%% Monolito Modular - Cenário 01
+    user_1["User (Client)"]
+    api_gateway_1["API Gateway"]
+    monolith_1["Monolithic Application"]
+    inventory_1[Inventory]
+    sales_1["Sales (Purchase Flow)"]
+    reporting_1[Reporting]
+    db_1[("Relational Database (ACID)")]
+    vault_1(("Secret Vault"))
+    queue_1[("Message Queue (Kafka/RabbitMQ)")]
+    worker_1["Notification Worker"]
+    user_1 --> api_gateway_1
+    api_gateway_1 --> monolith_1
+    monolith_1 --> db_1
+    monolith_1 --> vault_1
+    sales_1 --> queue_1
+    queue_1 --> worker_1
+    inventory_1 --> db_1
+    reporting_1 --> db_1
