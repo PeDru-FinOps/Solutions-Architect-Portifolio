@@ -1,99 +1,101 @@
 ## Functional Requirements
 
-Inventory Management: The store owner should be able to register products, edit prices and update stock balances.
+- Auth:
+  - Usuário deve ser capaz de se registrar e fazer login
+  - Sistema deve autenticar via token 
+  - Sistema deve restringir acesso a endpoints autenticados
 
-Purchase Flow: The end customer should be able to view the product display, add items to ther cart, and make payments via credit card.
+- Pedidos:
+  - Usuário deve ser capaz de criar um pedido
+  - Usuário deve visualizar seus pedidos
+  - Pedido deve iniciar com status PENDENTE
 
-Notification: The system should send a confirmation email after payment approval.
+- Pagamentos:
+  - Sistema deve gerar cobrança PIX vinculada a um pedido
+  - Sistema deve atualizar automaticamente o status do pedido após confirmação do pagamento
+  - Sistema deve garantir que um pagamento não seja processado mais de uma vez (idempotência)
 
-Reports: The store owner needs a screen that shows the total sales per day.
+- Catálogo:
+  - Usuário deve visualizar lista de revistas disponíveis
+  - Sistema deve exibir preço e edição
+
+- Administração:
+  - Admin deve visualizar pedidos e pagamentos
 
 ## Constraints
 
-The "Go-live" date is non-negotiable: 21 consecutive days.
-
-Initial infrastructure budget of a maximum of USD 200/month.
+- O sistema deve ser implementado utilizando serviços gratuitos ou de baixo custo
+- Deve ser possível rodar o sistema em ambiente local sem dependência de serviços pagos
 
 ## Non-Functional Requirements
 
 ### Cost Efficiency
 
-Infrastructure must not exceed USD 200 per month
-
-For MVP use single database deployment
-
-Serverless or low-cost compute
+- O sistema deve operar utilizando infraestrutura gratuita ou de baixo custo no MVP
+- Deve suportar execução local para desenvolvimento
+- Deve utilizar banco de dados único (single database)
 
 ### Availability
 
-Maximum acceptable downtime = 7h 12m per month
-
-The system must not remain unavailable for more than 15 consecutive minutes during business hours
-
-Scheduled maintenance is permitted between 02:00 AM and 05:00 AM
+- O sistema pode ficar indisponível durante manutenção entre 02:00 e 05:00
+- Fora desse período, deve estar disponível para uso
 
 ### Scalability
 
-System must support scaling without major architectural changes
-
-Infrastructure should allow incremental scaling with minimal cost impact
+- O sistema deve permitir aumento de carga sem refatoração significativa
+- A arquitetura deve permitir separação futura em serviços independentes
 
 ### Security
 
-External communication must use HTTPS
-
-Access to the store owner must require authentication and authorization
-
-Password must be stored using  secret vaults
-
-Sensitive payment data must not be stored internally
-
-The presentation Layer don't comunicate with Dabatase ou Persistence Layer
+- A autenticação deve ser obrigatória para operações protegidas
+- Toda comunicação deve usar HTTPS
+- Credenciais não devem estar hard-coded
+- O frontend não deve acessar diretamente o banco de dados
 
 ### Reliability and Fault Tolerance
 
-If the email notification fails, the purchase must still be completed sucessfully
-
-Payment confirmation must be persisted reliably in the database
+- Falhas em serviços auxiliares (ex: envio de email) não devem impactar a conclusão do pedido
+- A confirmação de pagamento deve ser persistida de forma confiável
 
 ### Maintainability
 
-The codebase must follow modular design principles
-
-Source code must be versioned using Git
-
-Basic documentation must be available for deployment and operations
+- O código deve seguir arquitetura modular
+- O código deve ser versionado em Git
+- Deve existir documentação mínima para setup e execução
 
 ### Observability
 
-The system must allow monitoring and trobleshooting
+- O sistema deve registrar logs de:
+  - eventos de pagamento
+  - erros
+  - tentativas de autenticação
 
-Application logs record: payment events, errors, authentication attempts
+- Logs devem ser armazenados por pelo menos 30 dias
 
-Logs retained for at least 30 days
+- Deve ser possível identificar falhas através dos logs
 
-Must alert the team in case of downtime
+- O sistema deve emitir alertas básicos em caso de indisponibilidade
 
 ### Deployment
 
-The system must support fast and safe deployments
-
-Must be automated via CI/CD pipelines
-
-Rollback procedures must be available in case of failure
+- Deploy deve ser automatizado via CI/CD
+- Deve ser possível realizar rollback em caso de falha
 
 ### Data Integrity
 
-Payment transactions must be ACID compliant
+- Transações de pagamento devem ser ACID
+- O sistema deve garantir consistência entre pedido e pagamento
+- Nenhum pagamento pode existir sem um pedido associado
 
-Transactions must be accurate
+### Idenpotency
 
+- O sistema deve garantir idempotência no processamento de pagamentos
+- Webhooks duplicados não devem gerar efeitos colaterais
 
+### Rastreability
+
+- O sistema deve permitir rastrear cada pagamento até o pedido e usuário correspondente
 
 ## SLA and SLO Considerations
-
-SLA: The Legal Department finalized an agreement with the initial retailers for 99,0% monthly availability.
-
-SLO: The CEO expects that the system supports the launch without stay offline for more than 15 consecutive minutes during business hours.
 
 Maintenance Window: the Business authorizes scheduled maintenance between 2:00AM and 5:00AM, if necessary.

@@ -1,1 +1,0 @@
-Não há nesse caso.
