@@ -9,6 +9,7 @@
   - Usuário deve ser capaz de criar um pedido
   - Usuário deve visualizar seus pedidos
   - Pedido deve iniciar com status PENDENTE
+  - Pedidos não pagos no prazo ganham status de CANCELADO
 
 - Pagamentos:
   - Sistema deve gerar cobrança PIX vinculada a um pedido
